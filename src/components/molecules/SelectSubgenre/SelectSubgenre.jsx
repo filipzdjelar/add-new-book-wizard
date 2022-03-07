@@ -1,37 +1,57 @@
-import Stepper from '../../atoms/Stepper/Stepper';
 import NavigationButtons from '../../atoms/NavigationButtons/NavigationButtons';
 import classes from './SelectSubgenre.module.scss';
-import { useState } from 'react';
 import classNames from 'classnames/bind';
 import Button from '@mui/material/Button';
 import { data } from '../../../data/data';
-function SelectSubgenre() {
-  const [selectedGenre, setSelectedGenre] = useState('');
-  const [activeButtonId, setActiveButtonId] = useState(1);
+import { useSelector, useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { actionCreators } from '../../../state/index';
 
+function SelectSubgenre({
+  selectedGenreId,
+  selectedSubgenreId,
+  setSelectedSubgenreId,
+  setAddingNewSubgenre,
+  addingNewSubgenre,
+}) {
   let cx = classNames.bind(classes);
-
+  const dispatch = useDispatch();
+  const { nextStep } = bindActionCreators(actionCreators, dispatch);
+  const currentStepId = useSelector((state) => state.main.currentStepId);
   return (
-    <div className={classes.wrapper}>
-      <Stepper />
+    <>
       <div className={classes.buttonGroup}>
-        {data.genres[0].subgenres.map((subgenre) => (
+        {data.genres[selectedGenreId - 1]?.subgenres.map((subgenre) => (
           <Button
-            key={subgenre.id}
+            key={subgenre.id - 1}
             onClick={() => {
-              setActiveButtonId(subgenre.id);
+              setSelectedSubgenreId(subgenre.id);
+              setAddingNewSubgenre(false);
             }}
             className={cx({
-              buttonActive: activeButtonId == subgenre.id,
+              buttonActive: selectedSubgenreId === subgenre.id,
             })}
           >
             {subgenre.name}
           </Button>
         ))}
-        <Button>Add New</Button>
+        <Button
+          onClick={() => {
+            setAddingNewSubgenre(true);
+            setSelectedSubgenreId();
+            nextStep(currentStepId + 1);
+          }}
+          className={cx({
+            buttonActive: addingNewSubgenre,
+          })}
+        >
+          Add New
+        </Button>
       </div>
-      <NavigationButtons />
-    </div>
+      <NavigationButtons
+        optionSelected={selectedSubgenreId || addingNewSubgenre}
+      />
+    </>
   );
 }
 

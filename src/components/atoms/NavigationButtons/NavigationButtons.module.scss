@@ -1,3 +1,12 @@
 .buttonsWrapper {
   margin-top: 20px;
+  display: flex;
+  margin-left: auto;
+  button {
+    height: 55px !important;
+  }
+}
+.buttonDisabled {
+  pointer-events: none;
+  opacity: 0.4;
 }

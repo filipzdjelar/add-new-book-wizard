@@ -1,24 +1,39 @@
 import Button from '@mui/material/Button';
 import classes from './NavigationButtons.module.scss';
-function NavigationButtons() {
+import { useSelector, useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { actionCreators } from '../../../state/index';
+import classNames from 'classnames/bind';
+function NavigationButtons({ optionSelected }) {
+  const currentStepId = useSelector((state) => state.main.currentStepId);
+  const dispatch = useDispatch();
+  const { nextStep, previousStep } = bindActionCreators(
+    actionCreators,
+    dispatch
+  );
+  let cx = classNames.bind(classes);
+
   return (
     <div className={classes.buttonsWrapper}>
-      <Button
-        color="inherit"
-        // disabled={activeStep === 0}
-        // onClick={handleBack}
-        // sx={{ mr: 1 }}
+      <div
+        className={cx({
+          buttonDisabled: currentStepId === 1,
+        })}
       >
-        Back
-      </Button>
-      <Button
-        color="inherit"
-        // disabled={activeStep === 0}
-        // onClick={handleBack}
-        // sx={{ mr: 1 }}
+        <Button onClick={() => previousStep(currentStepId - 1)}>Back</Button>
+      </div>
+      <div
+        className={cx({
+          buttonDisabled: !optionSelected,
+        })}
       >
-        Next
-      </Button>
+        <Button
+          style={{ background: '#525a66', color: '#fff' }}
+          onClick={() => nextStep(currentStepId + 1)}
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 }

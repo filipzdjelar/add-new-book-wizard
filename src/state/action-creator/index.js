@@ -1,17 +1,17 @@
-export const depositMoney = (amount) => {
+export const nextStep = (value) => {
   return (dispatch) => {
     dispatch({
-      type: 'deposit',
-      payload: amount,
+      type: 'nextStep',
+      payload: value,
     });
   };
 };
 
-export const withdrawMoney = (amount) => {
+export const previousStep = (value) => {
   return (dispatch) => {
     dispatch({
-      type: 'withdraw',
-      payload: amount,
+      type: 'previousStep',
+      payload: value,
     });
   };
 };
