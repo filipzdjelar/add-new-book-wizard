@@ -5,14 +5,11 @@ import StepLabel from '@mui/material/StepLabel';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 
-const initialSteps = ['Genre', 'Subgenre', '...'];
-const stepsNotAddingSubegre = ['Genre', 'Subgenre', 'Information'];
-const stepsAddingSubgenre = [
-  'Genre',
-  'Subgenre',
-  'Add subgenre',
-  'Information',
-];
+import {
+  initialSteps,
+  stepsNotAddingSubegre,
+  stepsAddingSubgenre,
+} from '../../../data/stepperLabels';
 
 const StepperSection = () => {
   const addingNewSubgenre = useSelector(

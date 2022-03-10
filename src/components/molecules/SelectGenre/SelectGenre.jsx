@@ -14,7 +14,7 @@ const SelectGenre = () => {
   const selectedGenreId = useSelector((state) => state.main.selectedGenreId);
   return (
     <>
-      <div className={classes.buttonGroup}>
+      <div>
         {genreData?.map((genreData) => (
           <Button
             key={genreData.id}
