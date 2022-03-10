@@ -27,9 +27,9 @@ const SelectSubgenre = () => {
   return (
     <>
       <div className={classes.buttonGroup}>
-        {genreData?.[selectedGenreId]?.subgenres.map((subgenre) => (
+        {genreData?.[selectedGenreId - 1]?.subgenres.map((subgenre) => (
           <Button
-            key={subgenre.id - 1}
+            key={subgenre.id}
             onClick={() => {
               setSelectedSubgenreId(subgenre.id);
               setAddingNewSubgenre(false);
