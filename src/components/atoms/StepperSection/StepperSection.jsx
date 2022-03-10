@@ -14,33 +14,47 @@ const stepsAddingSubgenre = [
   'Information',
 ];
 
-export default function Steppoer({ addingNewSubgenre }) {
+const StepperSection = () => {
+  const addingNewSubgenre = useSelector(
+    (state) => state.main.addingNewSubgenre
+  );
+  const resultPageMounted = useSelector(
+    (state) => state.main.resultPageMounted
+  );
   const currentStepId = useSelector((state) => state.main.currentStepId);
   const [displayedSteps, setDisplayedSteps] = useState([]);
   useEffect(() => {
-    function handleDisplayedLabels() {
+    const handleDisplayedLabels = () => {
       if (addingNewSubgenre && currentStepId === 3) {
         return stepsAddingSubgenre;
       }
       if (currentStepId <= 2 && !addingNewSubgenre) {
         return initialSteps;
-      } else if (currentStepId > 2 && !addingNewSubgenre) {
+      }
+      if (currentStepId === 4 && addingNewSubgenre) {
+        return stepsAddingSubgenre;
+      }
+      if (currentStepId > 2 && !addingNewSubgenre) {
         return stepsNotAddingSubegre;
       }
-    }
+    };
 
     setDisplayedSteps(handleDisplayedLabels());
   }, [currentStepId, addingNewSubgenre]);
 
   return (
     <Box style={{ margin: 'auto' }} sx={{ width: '100%' }}>
-      <Stepper activeStep={currentStepId - 1} alternativeLabel>
-        {displayedSteps?.map((label) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
+      {!resultPageMounted ? (
+        <Stepper activeStep={currentStepId - 1} alternativeLabel>
+          {displayedSteps?.map((label) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+      ) : null}
     </Box>
   );
-}
+};
+
+export default StepperSection;

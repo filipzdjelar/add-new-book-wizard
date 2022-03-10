@@ -1,7 +1,7 @@
 import BookWizard from './components/organisms/BookWizard/BookWizard';
 
-function App() {
+const App = () => {
   return <BookWizard />;
-}
+};
 
 export default App;

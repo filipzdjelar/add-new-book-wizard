@@ -1,0 +1,9 @@
+.leftGroup {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  .editionSection {
+    display: flex;
+    flex-direction: row;
+  }
+}

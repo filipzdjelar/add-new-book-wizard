@@ -2,31 +2,36 @@ import NavigationButtons from '../../atoms/NavigationButtons/NavigationButtons';
 import classes from './SelectGenre.module.scss';
 import classNames from 'classnames/bind';
 import Button from '@mui/material/Button';
-import { data } from '../../../data/data';
+import { useDispatch, useSelector } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { actionCreators } from '../../../state/index';
 
-function SelectGenre({ setSelectedGenreId, selectedGenreId }) {
+const SelectGenre = () => {
   let cx = classNames.bind(classes);
-
+  const dispatch = useDispatch();
+  const { setSelectedGenreId } = bindActionCreators(actionCreators, dispatch);
+  const genreData = useSelector((state) => state.data.genreData.genres);
+  const selectedGenreId = useSelector((state) => state.main.selectedGenreId);
   return (
     <>
       <div className={classes.buttonGroup}>
-        {data.genres.map((genre) => (
+        {genreData?.map((genreData) => (
           <Button
-            key={genre.id}
+            key={genreData.id}
             onClick={() => {
-              setSelectedGenreId(genre.id);
+              setSelectedGenreId(genreData.id);
             }}
             className={cx({
-              buttonActive: selectedGenreId === genre.id,
+              buttonActive: selectedGenreId === genreData.id,
             })}
           >
-            {genre.name}
+            {genreData.name}
           </Button>
         ))}
       </div>
       <NavigationButtons optionSelected={selectedGenreId} />
     </>
   );
-}
+};
 
 export default SelectGenre;

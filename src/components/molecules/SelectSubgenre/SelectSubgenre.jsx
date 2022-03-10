@@ -2,26 +2,28 @@ import NavigationButtons from '../../atoms/NavigationButtons/NavigationButtons';
 import classes from './SelectSubgenre.module.scss';
 import classNames from 'classnames/bind';
 import Button from '@mui/material/Button';
-import { data } from '../../../data/data';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { actionCreators } from '../../../state/index';
 
-function SelectSubgenre({
-  selectedGenreId,
-  selectedSubgenreId,
-  setSelectedSubgenreId,
-  setAddingNewSubgenre,
-  addingNewSubgenre,
-}) {
-  let cx = classNames.bind(classes);
+const SelectSubgenre = () => {
   const dispatch = useDispatch();
-  const { nextStep } = bindActionCreators(actionCreators, dispatch);
+  const { setCurrentStepId, setSelectedSubgenreId, setAddingNewSubgenre } =
+    bindActionCreators(actionCreators, dispatch);
   const currentStepId = useSelector((state) => state.main.currentStepId);
+  const selectedGenreId = useSelector((state) => state.main.selectedGenreId);
+  const addingNewSubgenre = useSelector(
+    (state) => state.main.addingNewSubgenre
+  );
+  const genreData = useSelector((state) => state.data.genreData.genres);
+  const selectedSubgenreId = useSelector(
+    (state) => state.main.selectedSubgenreId
+  );
+  let cx = classNames.bind(classes);
   return (
     <>
       <div className={classes.buttonGroup}>
-        {data.genres[selectedGenreId - 1]?.subgenres.map((subgenre) => (
+        {genreData?.[selectedGenreId]?.subgenres.map((subgenre) => (
           <Button
             key={subgenre.id - 1}
             onClick={() => {
@@ -39,7 +41,7 @@ function SelectSubgenre({
           onClick={() => {
             setAddingNewSubgenre(true);
             setSelectedSubgenreId();
-            nextStep(currentStepId + 1);
+            setCurrentStepId(currentStepId + 1);
           }}
           className={cx({
             buttonActive: addingNewSubgenre,
@@ -53,6 +55,6 @@ function SelectSubgenre({
       />
     </>
   );
-}
+};
 
 export default SelectSubgenre;

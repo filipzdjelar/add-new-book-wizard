@@ -1,55 +1,62 @@
 import classes from './BookWizard.module.scss';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import SelectGenre from '../../molecules/SelectGenre/SelectGenre';
 import SelectSubgenre from '../../molecules/SelectSubgenre/SelectSubgenre';
 import NewSubgenre from '../../molecules/NewSubgenre/NewSubgenre';
 import InformationForm from '../../molecules/InformationForm/InformationForm';
-import Steppoer from '../../atoms/Stepper/Stepper';
-import { useState, useEffect } from 'react';
+import ResultPage from '../../molecules/ResultPage/ResultPage';
+import StepperSection from '../../atoms/StepperSection/StepperSection';
+import { useEffect } from 'react';
+import { bindActionCreators } from 'redux';
+import { actionCreators } from '../../../state/index';
+import { data } from '../../../data/data';
 
-function BookWizard() {
+const BookWizard = () => {
+  const dispatch = useDispatch();
+  const { setGenreData, setAddingNewSubgenre } = bindActionCreators(
+    actionCreators,
+    dispatch
+  );
+
   const currentStepId = useSelector((state) => state.main.currentStepId);
-  const [selectedGenreId, setSelectedGenreId] = useState();
-  const [selectedSubgenreId, setSelectedSubgenreId] = useState();
-  const [addingNewSubgenre, setAddingNewSubgenre] = useState(false);
+  const addingNewSubgenre = useSelector(
+    (state) => state.main.addingNewSubgenre
+  );
+  useEffect(() => {
+    //simulate some api call
+    setGenreData(data);
+  }, []);
 
-  function displayedComponent() {
+  useEffect(() => {
+    // this will help user if decide instead of adding new subgenre chose existing one
+    if (currentStepId < 3) setAddingNewSubgenre(false);
+  }, [currentStepId]);
+
+  const displayedComponent = () => {
     switch (currentStepId) {
       case 1:
-        return (
-          <SelectGenre
-            setSelectedGenreId={setSelectedGenreId}
-            selectedGenreId={selectedGenreId}
-            addingNewSubgenre={addingNewSubgenre}
-          />
-        );
+        return <SelectGenre />;
       case 2:
-        return (
-          <SelectSubgenre
-            selectedGenreId={selectedGenreId}
-            selectedSubgenreId={selectedSubgenreId}
-            setSelectedSubgenreId={setSelectedSubgenreId}
-            setAddingNewSubgenre={setAddingNewSubgenre}
-            addingNewSubgenre={addingNewSubgenre}
-          />
-        );
+        return <SelectSubgenre />;
       case 3:
         return addingNewSubgenre ? <NewSubgenre /> : <InformationForm />;
+      case 4:
+        return !addingNewSubgenre ? <ResultPage /> : <InformationForm />;
+      case 5:
+        return <ResultPage />;
       default:
         break;
     }
-  }
-  useEffect(() => {
-    if (currentStepId < 3) setAddingNewSubgenre(false);
-  }, [currentStepId]);
+  };
+
   return (
     <div className={classes.mainContainer}>
       <div className={classes.wrapper}>
-        <Steppoer addingNewSubgenre={addingNewSubgenre} />
+        <StepperSection />
         {displayedComponent()}
       </div>
     </div>
   );
-}
+};
 
 export default BookWizard;
