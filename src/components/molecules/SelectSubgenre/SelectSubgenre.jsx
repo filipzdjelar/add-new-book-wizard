@@ -8,8 +8,12 @@ import { actionCreators } from '../../../state/index';
 
 const SelectSubgenre = () => {
   const dispatch = useDispatch();
-  const { setCurrentStepId, setSelectedSubgenreId, setAddingNewSubgenre } =
-    bindActionCreators(actionCreators, dispatch);
+  const {
+    setCurrentStepId,
+    setSelectedSubgenreId,
+    setAddingNewSubgenre,
+    setNewSubgenreData,
+  } = bindActionCreators(actionCreators, dispatch);
   const currentStepId = useSelector((state) => state.main.currentStepId);
   const selectedGenreId = useSelector((state) => state.main.selectedGenreId);
   const addingNewSubgenre = useSelector(
@@ -29,6 +33,10 @@ const SelectSubgenre = () => {
             onClick={() => {
               setSelectedSubgenreId(subgenre.id);
               setAddingNewSubgenre(false);
+              setNewSubgenreData({
+                name: subgenre.name,
+                isDescriptionRequired: subgenre.isDescriptionRequired,
+              });
             }}
             className={cx({
               buttonActive: selectedSubgenreId === subgenre.id,

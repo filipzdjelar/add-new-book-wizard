@@ -9,21 +9,22 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import * as Yup from 'yup';
 import classes from './InformationForm.module.scss';
-import NavigationButtons from '../../atoms/NavigationButtons/NavigationButtons';
+import classNames from 'classnames/bind';
+import Button from '@mui/material/Button';
+
 const InformationForm = () => {
   const dispatch = useDispatch();
-  const { setInformationFormMounted, setFormOutputData } = bindActionCreators(
-    actionCreators,
-    dispatch
-  );
+  const { setInformationFormMounted, setFormOutputData, setCurrentStepId } =
+    bindActionCreators(actionCreators, dispatch);
+  const currentStepId = useSelector((state) => state.main.currentStepId);
   const genreData = useSelector((state) => state.data.genreData);
-  const selectedGenreId = useSelector((state) => state.main.selectedGenreId);
-  const selectedSubgenreId = useSelector(
-    (state) => state.main.selectedSubgenreId
+  const isDescriptionReq = useSelector(
+    (state) => state.data.newSubgenreData.isDescriptionRequired
   );
-  const isDescriptionFieldRequired =
-    genreData?.genres[1]?.subgenres[2]?.isDescriptionRequired;
+  const subgengreName = useSelector((state) => state.data.newSubgenreData.name);
+  const selectedGenreId = useSelector((state) => state.main.selectedGenreId);
 
+  let cx = classNames.bind(classes);
   useEffect(() => {
     setInformationFormMounted(true);
 
@@ -31,15 +32,11 @@ const InformationForm = () => {
       setInformationFormMounted(false);
     };
   });
-  console.log(selectedSubgenreId);
-  console.log(genreData);
 
   const formik = useFormik({
     initialValues: {
       genre: genreData?.genres[selectedGenreId - 1].name,
-      subgenre:
-        genreData?.genres[selectedGenreId - 1].subgenres[selectedSubgenreId],
-
+      subgenre: subgengreName,
       bookTitle: '',
       authorSelect: '',
       isbn: '',
@@ -56,13 +53,14 @@ const InformationForm = () => {
         /^([1-2][0-9]|3[0-1]|0?[1-9])[/]([1][0-2]|0?[1-9])[/]2[0-0][0-2][0-2]$/g,
         'Invalid date'
       ),
-      description: isDescriptionFieldRequired
+      description: isDescriptionReq
         ? Yup.string().required('Description Reqired')
         : null,
     }),
     onSubmit: (values) => {
       console.log(values);
       setFormOutputData(values);
+      setCurrentStepId(currentStepId + 1);
     },
   });
   return (
@@ -224,9 +222,9 @@ const InformationForm = () => {
                 value={formik.values.editionLanguage}
                 onChange={formik.handleChange}
               >
-                <MenuItem value={'A3'}>English</MenuItem>
-                <MenuItem value={'A4'}>Serbian</MenuItem>
-                <MenuItem value={'A5'}>Spanish</MenuItem>
+                <MenuItem value={'English'}>English</MenuItem>
+                <MenuItem value={'Serbian'}>Serbian</MenuItem>
+                <MenuItem value={'Spanish'}>Spanish</MenuItem>
               </Select>
             </div>
           </div>
@@ -253,9 +251,25 @@ const InformationForm = () => {
               : false
           }
         />
-        <button form="book-form" type="submit"></button>
+        <div className={classes.buttonGroup}>
+          <Button onClick={() => setCurrentStepId(currentStepId - 1)}>
+            Back
+          </Button>
+          <div
+            className={cx({
+              buttonDisabled: !(formik.dirty && formik.isValid),
+            })}
+          >
+            <Button
+              style={{ background: '#525a66', color: '#fff' }}
+              form="book-form"
+              type="submit"
+            >
+              Add
+            </Button>
+          </div>
+        </div>
       </form>
-      <NavigationButtons optionSelected={formik.dirty && formik.isValid} />
     </div>
   );
 };

@@ -2,8 +2,8 @@ const initialState = {
   genreData: {},
   formOutput: {},
   newSubgenreData: {
-    isDescriptionRequired: '',
     name: '',
+    isDescriptionRequired: '',
   },
 };
 

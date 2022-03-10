@@ -7,9 +7,6 @@ import { actionCreators } from '../../../state/index';
 
 const NavigationButtons = ({ optionSelected }) => {
   const currentStepId = useSelector((state) => state.main.currentStepId);
-  const informationFormMounted = useSelector(
-    (state) => state.main.informationFormMounted
-  );
   const dispatch = useDispatch();
   const { setCurrentStepId } = bindActionCreators(actionCreators, dispatch);
   let cx = classNames.bind(classes);
@@ -36,7 +33,7 @@ const NavigationButtons = ({ optionSelected }) => {
           form="book-form"
           type="submit"
         >
-          {informationFormMounted ? 'Add' : 'Next'}
+          Next
         </Button>
       </div>
     </div>

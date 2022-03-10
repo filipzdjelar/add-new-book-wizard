@@ -7,3 +7,14 @@
     flex-direction: row;
   }
 }
+.buttonGroup {
+  display: flex;
+  justify-content: right;
+  button {
+    height: 55px !important;
+  }
+}
+.buttonDisabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
